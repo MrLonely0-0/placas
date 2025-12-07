@@ -1,0 +1,57 @@
+%PDF-1.4
+1 0 obj << /Type /Catalog /Pages 2 0 R >> endobj
+2 0 obj << /Type /Pages /Count 3 /Kids [3 0 R 4 0 R 5 0 R] >> endobj
+3 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 6 0 R /Resources << /Font << /F1 7 0 R >> >> >> endobj
+4 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 8 0 R /Resources << /Font << /F1 7 0 R >> >> >> endobj
+5 0 obj << /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 10 0 R /Resources << /Font << /F1 7 0 R >> >> >> endobj
+6 0 obj << /Length 408 >> stream
+BT /F1 26 Tf 170 700 Td (UNINASSAU - Logo) Tj ET
+BT /F1 16 Tf 70 650 Td (Disciplina: Engenharia de Requisitos, Teste e Qualidade de Software) Tj ET
+BT /F1 16 Tf 70 625 Td (Trabalho: Cenarios e Casos de Teste - Campo Placa de Carro) Tj ET
+BT /F1 14 Tf 70 600 Td (Equipe: Nome 1, Nome 2, Nome 3) Tj ET
+BT /F1 14 Tf 70 575 Td (Professor: Nome do Professor) Tj ET
+BT /F1 12 Tf 70 90 Td (Mes/Ano: Dez/2025) Tj ET
+endstream
+endobj
+7 0 obj << /Type /Font /Subtype /Type1 /BaseFont /Helvetica >> endobj
+8 0 obj << /Length 527 >> stream
+BT /F1 18 Tf 70 720 Td (Introducao) Tj ET
+BT /F1 12 Tf 70 690 Td (Este trabalho apresenta o cenario e os casos de teste para o campo de placa de carro.) Tj ET
+BT /F1 12 Tf 70 670 Td (A validacao deve aceitar tanto o padrao antigo (AAA-0000) quanto o padrao Mercosul (AAA0A00).) Tj ET
+BT /F1 12 Tf 70 650 Td (Entradas fora dos formatos devem ser rejeitadas com mensagem clara ao usuario.) Tj ET
+BT /F1 12 Tf 70 630 Td (Os testes foram planejados para cobrir casos validos, limites e erros comuns.) Tj ET
+endstream
+endobj
+10 0 obj << /Length 1305 >> stream
+BT /F1 18 Tf 70 720 Td (Execucao) Tj ET
+BT /F1 12 Tf 70 690 Td (Cenario: validar campo de placa em cadastro de veiculos.) Tj ET
+BT /F1 12 Tf 70 670 Td (Contexto: usuario digita a placa; sistema deve aceitar padroes AAA-0000 e AAA0A00.) Tj ET
+BT /F1 12 Tf 70 650 Td (Tabela de casos de teste:) Tj ET
+BT /F1 10 Tf 70 630 Td (ID | Descricao | Dado de teste | Resultado esperado | Resultado atual | Status) Tj ET
+BT /F1 10 Tf 70 610 Td (1 | Placa antiga valida | ABC-1234 | Aceitar cadastro | N/E | Planejado) Tj ET
+BT /F1 10 Tf 70 595 Td (2 | Placa Mercosul valida | BRA2E19 | Aceitar cadastro | N/E | Planejado) Tj ET
+BT /F1 10 Tf 70 580 Td (3 | Antigo sem hifen | ABC1234 | Rejeitar formato invalido | N/E | Planejado) Tj ET
+BT /F1 10 Tf 70 565 Td (4 | Mercosul com digito faltando | BRA2E1 | Rejeitar formato invalido | N/E | Planejado) Tj ET
+BT /F1 10 Tf 70 550 Td (5 | Caracter especial | A@A-1234 | Rejeitar caracteres invalidos | N/E | Planejado) Tj ET
+BT /F1 10 Tf 70 535 Td (6 | Espacos nas extremidades | ABC-1234 | Aparar e validar formato antigo | N/E | Planejado) Tj ET
+BT /F1 10 Tf 70 520 Td (7 | Campo vazio | (vazio) | Exibir mensagem de obrigatoriedade | N/E | Planejado) Tj ET
+BT /F1 10 Tf 70 505 Td (8 | Antiga minuscula | abc-1234 | Rejeitar ou converter para maiusculo antes de validar | N/E | Planejado) Tj ET
+endstream
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000127 00000 n 
+0000000253 00000 n 
+0000000379 00000 n 
+0000000506 00000 n 
+0000000964 00000 n 
+0000001034 00000 n 
+0000000000 65535 f 
+0000001611 00000 n 
+trailer << /Size 11 /Root 1 0 R >>
+startxref
+2968
+%%EOF
