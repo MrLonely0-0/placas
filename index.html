@@ -91,11 +91,11 @@
       const normalized = normalizePlate(raw);
       const errors = [];
       if (!normalized) {
-        errors.push('Placa obrigatoria');
+        errors.push('Placa obrigatória');
         return { valid: false, plate_type: null, normalized, errors };
       }
       if (normalized.includes(' ')) {
-        errors.push('Nao use espacos internos');
+        errors.push('Não use espaços internos');
       }
       if (OLD.test(normalized)) {
         return { valid: true, plate_type: 'ANTIGA', normalized, errors };
@@ -107,7 +107,7 @@
       if (MERCOSUL.test(normalized)) {
         return { valid: true, plate_type: 'MERCOSUL', normalized, errors };
       }
-      if (!errors.length) errors.push('Formato invalido: use AAA-0000 (hifen opcional) ou AAA0A00');
+      if (!errors.length) errors.push('Formato inválido: use AAA-0000 (hífen opcional) ou AAA0A00');
       return { valid: false, plate_type: null, normalized, errors };
     }
 
@@ -133,7 +133,7 @@
       const infoHtml = info ? `<div>Marca: <strong>${info.brand}</strong></div>
         <div>Modelo: <strong>${info.model}</strong></div>
         <div>Cor: <strong>${info.color}</strong></div>
-        <div>Ano: <strong>${info.year}</strong></div>` : `<div>Veículo: n/d</div>`;
+        <div>Ano: <strong>${info.year}</strong></div>` : `<div>Veículo: N/D</div>`;
       resultEl.innerHTML = `<div class="${data.valid ? 'ok' : 'erro'}">${data.valid ? 'OK' : 'ERRO'}</div>` +
         `<div>Normalizada: <strong class="mono">${data.normalized}</strong></div>` +
         `<div>Tipo: <strong>${data.plate_type || '-'}</strong></div>` +
