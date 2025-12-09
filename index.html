@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Validador de Placas</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #fff;
+      --border: #dbe2f3;
+      --text: #1f2a44;
+      --muted: #51607f;
+      --ok: #0f8a2f;
+      --err: #c62828;
+      --accent1: #1f5bff;
+      --accent2: #1bc8ff;
+    }
+    body { font-family: "Segoe UI", Arial, sans-serif; max-width: 760px; margin: 32px auto; padding: 0 16px; background: var(--bg); color: var(--text); }
+    h1 { margin-bottom: 4px; }
+    p { color: var(--muted); }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px; box-shadow: 0 10px 30px rgba(31, 42, 68, 0.08); }
+    label { display: block; margin-bottom: 8px; font-weight: 600; }
+    input { width: 100%; padding: 12px; border: 1px solid #c8d3e6; border-radius: 10px; font-size: 16px; }
+    button { margin-top: 12px; padding: 12px 16px; border: none; border-radius: 10px; background: linear-gradient(135deg, var(--accent1), var(--accent2)); color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; box-shadow: 0 10px 24px rgba(31, 91, 255, 0.2); }
+    button:disabled { opacity: 0.6; cursor: not-allowed; }
+    .result { margin-top: 16px; padding: 12px; border-radius: 10px; border: 1px solid var(--border); background: #f9fbff; }
+    .ok { color: var(--ok); font-weight: 700; }
+    .erro { color: var(--err); font-weight: 700; }
+    .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+    .chip { padding: 8px 10px; background: #e9f1ff; border-radius: 999px; cursor: pointer; border: 1px solid #d0defa; }
+    .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; margin-top: 10px; }
+    .mono { font-family: "SFMono-Regular", Consolas, monospace; }
+  </style>
+</head>
+<body>
+  <h1>Validador de Placas</h1>
+  <p>Funciona 100% estático (GitHub Pages). Formatos: <strong>AAA-0000</strong> (antigo, hífen opcional) e <strong>AAA0A00</strong> (Mercosul).</p>
+  <div class="card">
+    <label for="placa">Digite uma placa</label>
+    <input id="placa" placeholder="Ex: ABC1234 ou BRA2E19" />
+    <div class="chips" id="chips"></div>
+    <button id="btn">Validar</button>
+    <div class="result" id="result" style="display:none"></div>
+  </div>
+
+  <script>
+    const OLD = /^[A-Z]{3}-[0-9]{4}$/;
+    const OLD_COMPACT = /^[A-Z]{3}[0-9]{4}$/;
+    const MERCOSUL = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
+
+    const samples = ["ABC-1234", "ABC1234", "BRA2E19", "abc1234", "abc1d34", "A@A-1234", "BRA2E1", " AAA1234 ", "GLS7D55", "RTX9E88"];
+    const chipsContainer = document.getElementById('chips');
+    samples.forEach(s => {
+      const div = document.createElement('div');
+      div.className = 'chip';
+      div.textContent = s;
+      div.onclick = () => { document.getElementById('placa').value = s; validate(); };
+      chipsContainer.appendChild(div);
+    });
+
+    function validate() {
+      document.getElementById('btn').click();
+    }
+
+    let vehicleDb = {};
+    async function loadDb() {
+      try {
+        const resp = await fetch('./vehicle_db.json');
+        if (!resp.ok) throw new Error('no db');
+        const data = await resp.json();
+        const map = {};
+        data.forEach(item => {
+          const plate = (item.plate || '').toString().trim().toUpperCase();
+          if (!plate) return;
+          map[plate] = item;
+          const compact = plate.replace('-', '');
+          map[compact] = item;
+        });
+        vehicleDb = map;
+      } catch (e) {
+        vehicleDb = {};
+      }
+    }
+
+    function normalizePlate(raw) {
+      return raw.trim().toUpperCase();
+    }
+
+    function validatePlate(raw) {
+      const normalized = normalizePlate(raw);
+      const errors = [];
+      if (!normalized) {
+        errors.push('Placa obrigatoria');
+        return { valid: false, plate_type: null, normalized, errors };
+      }
+      if (normalized.includes(' ')) {
+        errors.push('Nao use espacos internos');
+      }
+      if (OLD.test(normalized)) {
+        return { valid: true, plate_type: 'ANTIGA', normalized, errors };
+      }
+      if (OLD_COMPACT.test(normalized)) {
+        const normHyphen = `${normalized.slice(0,3)}-${normalized.slice(3)}`;
+        return { valid: true, plate_type: 'ANTIGA', normalized: normHyphen, errors };
+      }
+      if (MERCOSUL.test(normalized)) {
+        return { valid: true, plate_type: 'MERCOSUL', normalized, errors };
+      }
+      if (!errors.length) errors.push('Formato invalido: use AAA-0000 (hifen opcional) ou AAA0A00');
+      return { valid: false, plate_type: null, normalized, errors };
+    }
+
+    function getVehicleInfo(normalizedPlate) {
+      const key = normalizedPlate.toUpperCase();
+      return vehicleDb[key] || vehicleDb[key.replace('-', '')] || null;
+    }
+
+    const btn = document.getElementById('btn');
+    const resultEl = document.getElementById('result');
+    btn.onclick = async () => {
+      const placa = document.getElementById('placa').value;
+      if (!placa) return;
+      btn.disabled = true;
+      resultEl.style.display = 'none';
+      const data = validatePlate(placa);
+      let info = data.valid ? getVehicleInfo(data.normalized) : null;
+      if (data.valid && !info) {
+        info = await fetchExternalVehicleInfo(data.normalized);
+      }
+      btn.disabled = false;
+      resultEl.style.display = 'block';
+      const infoHtml = info ? `<div>Marca: <strong>${info.brand}</strong></div>
+        <div>Modelo: <strong>${info.model}</strong></div>
+        <div>Cor: <strong>${info.color}</strong></div>
+        <div>Ano: <strong>${info.year}</strong></div>` : `<div>Veículo: n/d</div>`;
+      resultEl.innerHTML = `<div class="${data.valid ? 'ok' : 'erro'}">${data.valid ? 'OK' : 'ERRO'}</div>` +
+        `<div>Normalizada: <strong class="mono">${data.normalized}</strong></div>` +
+        `<div>Tipo: <strong>${data.plate_type || '-'}</strong></div>` +
+        infoHtml +
+        `<div>Erros: ${data.errors.length ? data.errors.join('; ') : '-'}</div>`;
+    };
+
+    async function fetchExternalVehicleInfo(normalizedPlate) {
+      try {
+        const resp = await fetch('/api/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ placa: normalizedPlate })
+        });
+        if (!resp.ok) return null;
+        const data = await resp.json();
+        return data.vehicle_info || null;
+      } catch (e) {
+        return null;
+      }
+    }
+
+    loadDb();
+  </script>
+</body>
+</html>
