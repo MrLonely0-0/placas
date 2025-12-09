@@ -12,7 +12,17 @@ Valida placas no formato antigo `AAA-0000` (com ou sem hífen digitado, será no
 pip install -r requirements.txt
 ```
 
-## Como usar (CLI)
+## Como usar
+
+### Interface Web (Principal)
+Execute o validador de placas via interface web:
+```powershell
+python index.py
+```
+Abra http://localhost:8000 e use o formulário. A interface web inclui link para o modo CLI. Também há endpoint JSON `POST /api/validate` com corpo `{"placa": "ABC-1234"}`.
+
+### Linha de Comando (CLI)
+Para validar placas via linha de comando:
 ```powershell
 python main.py "ABC-1234" "BRA2E19" "ABC1234"
 ```
@@ -23,11 +33,11 @@ BRA2E19  -> OK | tipo=MERCOSUL | normalizada=BRA2E19 | veiculo=Chevrolet Onix 1.
 ABC1234  -> OK | tipo=ANTIGA | normalizada=ABC-1234 | veiculo=Volkswagen Gol 1.6 2018 cor=Prata |
 ```
 
-## Como usar (Web)
+### Interface Web Alternativa
+Também disponível via `app.py` (funcionalidade equivalente ao index.py):
 ```powershell
 python app.py
 ```
-Abra http://localhost:8000 e use o formulário. Também há endpoint JSON `POST /api/validate` com corpo `{"placa": "ABC-1234"}`.
 
 ### Versão estática (GitHub Pages)
 - Arquivo: `static/index.html` (funciona apenas com HTML/JS, sem backend).
@@ -52,9 +62,10 @@ python -m unittest discover -s tests
 ```
 
 ## Estrutura
+- `index.py`: **ponto de entrada principal** - app Flask com interface web e API `/api/validate`.
 - `plate_validator.py`: funções de validação.
-- `main.py`: CLI simples para validar uma ou mais placas.
-- `app.py`: app Flask com página HTML e API `/api/validate`.
+- `main.py`: CLI simples para validar uma ou mais placas via linha de comando.
+- `app.py`: interface web alternativa (funcionalidade similar ao index.py).
 - `vehicle_info.py`: mock de dados do veículo (marca, modelo, cor, ano).
 - `static/index.html`: versão 100% estática para GitHub Pages, usando o mesmo `vehicle_db.json`.
 - `tests/`: casos de teste unitários.
