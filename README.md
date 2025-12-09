@@ -34,7 +34,7 @@ ABC1234  -> OK | tipo=ANTIGA | normalizada=ABC-1234 | veiculo=Volkswagen Gol 1.6
 ```
 
 ### Interface Web Alternativa
-Também disponível via `app.py`:
+Também disponível via `app.py` (funcionalidade equivalente ao index.py):
 ```powershell
 python app.py
 ```

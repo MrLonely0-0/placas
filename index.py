@@ -51,7 +51,7 @@ HTML_PAGE = """
   </div>
   
   <script>
-    const samples = ["ABC-1234", "ABC1234", "BRA2E19", "ABC1234", "A@A-1234", "BRA2E1", " abc-1234 ", "AAA 1234", "ABCD-123" ];
+    const samples = ["ABC-1234", "ABC1234", "BRA2E19", "GLS7D55", "A@A-1234", "BRA2E1", " abc-1234 ", "AAA 1234", "ABCD-123" ];
     const chipsContainer = document.getElementById('chips');
     samples.forEach(s => {
       const div = document.createElement('div');
